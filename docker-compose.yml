@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  # Container số 1: Con Web Spring Boot của tụi mình
+  web-app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db # Bảo Web hãy đợi Database chạy xong thì mới khởi động
+
+  # Container số 2: Hệ quản trị cơ sở dữ liệu PostgreSQL ảo
+  postgres-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: devops_user
+      POSTGRES_PASSWORD: my_password_123
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
