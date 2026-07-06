@@ -10,8 +10,8 @@ import java.util.List;
 public class ApiController {
 
     @Autowired
-    private MemberRepository memberRepository; // Triệu hồi bộ điều khiển DB vào đây
-
+    private MemberRepository memberRepository; // Triệu hồi bộ điều khiển DB vào  đây
+ 
     // API 1: Thêm thành viên mới qua URL. Ví dụ: /api/add?name=Yen
     @GetMapping("/api/add")
     public String addMember(@RequestParam String name) {

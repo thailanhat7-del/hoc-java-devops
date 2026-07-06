@@ -1,0 +1,27 @@
+name: Tự Động Build Hệ Thống (CI Pipeline)
+
+# Kịch bản này sẽ tự động chạy MỖI KHI bạn push code lên nhánh main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Robot sẽ mượn 1 con server Linux trống của GitHub để chạy
+
+    steps:
+    # Bước 1: Robot tự động kéo code từ GitHub của bạn về máy nó
+    - name: Kéo code mới nhất về
+      uses: actions/checkout@v4
+
+    # Bước 2: Robot tự cài đặt môi trường Java 21 để chuẩn bị dịch code
+    - name: Cài đặt Java 17 (JDK)
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    # Bước 3: Robot tự chạy lệnh Maven để biên dịch thử xem code có bị lỗi gì không
+    - name: Biên dịch code bằng Maven
+      run: mvn clean compile
