@@ -4,6 +4,8 @@ name: Tự Động Build Hệ Thống (CI Pipeline)
 on:
   push:
     branches: [ "main" ]
+    pull_request:
+    branches: [ "main" ] # Bảo robot: Cứ có ai xin gộp (Pull Request) vào main là phải thức dậy test ngay!
 
 jobs:
   build-and-test:
