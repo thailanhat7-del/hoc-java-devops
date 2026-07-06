@@ -24,4 +24,5 @@ jobs:
 
     # Bước 3: Robot tự chạy lệnh Maven để biên dịch thử xem code có bị lỗi gì không
     - name: Biên dịch code bằng Maven
-      run: mvn clean compile
+      # run: mvn clean compile
+      run: mvn clean test.
