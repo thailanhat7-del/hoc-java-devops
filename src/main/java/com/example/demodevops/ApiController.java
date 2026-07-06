@@ -23,7 +23,6 @@ public class ApiController {
     // API 2: Lấy ra toàn bộ danh sách thành viên đang có
     @GetMapping("/api/members")
     public List<DevOpsMember> getAllMembers() {
-        // memberRepository.findAll(); // Cố tình khóa dòng đúng lại
-        return null; // Phá hoại: Luôn trả về null! Code không lỗi cú pháp nhưng logic sai hoàn toàn
+        return memberRepository.findAll(); // Mở khóa lại dòng đúng, xóa dòng return null đi!
     }
 }
