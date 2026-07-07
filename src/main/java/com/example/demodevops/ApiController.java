@@ -25,4 +25,9 @@ public class ApiController {
     public List<DevOpsMember> getAllMembers() {
         return memberRepository.findAll(); // Mở khóa lại dòng đúng, xóa dòng return null đi!
     }
+
+    @GetMapping("/api/test")
+    public String Test() {
+        return "Đã test thành công!";
+    }
 }
