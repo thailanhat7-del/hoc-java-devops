@@ -1,20 +1,37 @@
 version: '3.8'
 
 services:
-  # Container số 1: Con Web Spring Boot của tụi mình
-  web-app:
-    build: .
+  # Hộp 1: Database (Giữ nguyên không đổi)
+  db:
+    image: mysql:8.0
+    container_name: my_database
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: hoc_devops_db
+      MYSQL_USER: yen_user
+      MYSQL_PASSWORD: yenpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Hộp 2: Java App (Thêm phần environment)
+  backend:
+    image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
+    container_name: java_app
     ports:
       - "8080:8080"
-    depends_on:
-      - postgres-db # Bảo Web hãy đợi Database chạy xong thì mới khởi động
-
-  # Container số 2: Hệ quản trị cơ sở dữ liệu PostgreSQL ảo
-  postgres-db:
-    image: postgres:16-alpine
     environment:
-      POSTGRES_USER: devops_user
-      POSTGRES_PASSWORD: my_password_123
-      POSTGRES_DB: mydb
-    ports:
-      - "5432:5432"
+      # Báo cho Java biết đường dẫn đến Database. 'db' chính là tên của hộp 1.
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC
+      # Cấp tài khoản cho Java chui vào
+      - SPRING_DATASOURCE_USERNAME=yen_user
+      - SPRING_DATASOURCE_PASSWORD=yenpassword
+      # Phép thuật: Báo cho Java tự động tạo bảng nếu chưa có (không cần gõ tay nữa)
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  db_data:
