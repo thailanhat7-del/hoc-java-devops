@@ -21,7 +21,9 @@ services:
     container_name: java_app
     # ĐÃ XÓA dòng ports "8080:8080" ở đây!
     environment:
+      # Báo cho Java biết đường dẫn đến Database. 'db' chính là tên của hộp 1.
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      # Cấp tài khoản cho Java chui vào
       - SPRING_DATASOURCE_USERNAME=yen_user
       - SPRING_DATASOURCE_PASSWORD=yenpassword
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
