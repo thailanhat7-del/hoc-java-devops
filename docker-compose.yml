@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Hộp 1: Database (Giữ nguyên không đổi)
+  # Hộp 1: Database (Giữ nguyên)
   db:
     image: mysql:8.0
     container_name: my_database
@@ -15,22 +15,32 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  # Hộp 2: Java App (Thêm phần environment)
+  # Hộp 2: Java App (Đã đóng kín cửa, không cho khách vào thẳng nữa)
   backend:
     image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
     container_name: java_app
-    ports:
-      - "8080:8080"
+    # ĐÃ XÓA dòng ports "8080:8080" ở đây!
     environment:
       # Báo cho Java biết đường dẫn đến Database. 'db' chính là tên của hộp 1.
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       # Cấp tài khoản cho Java chui vào
       - SPRING_DATASOURCE_USERNAME=yen_user
       - SPRING_DATASOURCE_PASSWORD=yenpassword
-      # Phép thuật: Báo cho Java tự động tạo bảng nếu chưa có (không cần gõ tay nữa)
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
     depends_on:
       - db
+    restart: always
+
+  # Hộp 3: Lễ tân Nginx (MỚI THÊM)
+  nginx:
+    image: nginx:latest
+    container_name: my_nginx
+    ports:
+      - "80:80" # Nginx giữ cửa chính
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend # Đợi hộp backend chạy lên thì Nginx mới làm việc
     restart: always
 
 volumes:
