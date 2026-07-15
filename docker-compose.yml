@@ -36,11 +36,12 @@ services:
     image: nginx:latest
     container_name: my_nginx
     ports:
-      - "80:80" # Nginx giữ cửa chính
+      - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend:/usr/share/nginx/html  # THÊM DÒNG NÀY VÀO ĐÂY
     depends_on:
-      - backend # Đợi hộp backend chạy lên thì Nginx mới làm việc
+      - backend
     restart: always
 
 volumes:

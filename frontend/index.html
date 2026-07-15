@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background: #f4f4f5;
+            color: #333;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 4rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            max-width: 400px;
+        }
+        h1 { margin-bottom: 0.5rem; font-weight: 600; letter-spacing: -0.5px; }
+        p { margin-bottom: 2rem; color: #666; font-weight: 300; line-height: 1.5; }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #18181b;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        button:hover { background: #3f3f46; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        #result { margin-top: 1.5rem; font-weight: 600; min-height: 20px; }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <h1>Kiến trúc All-in-One</h1>
+        <p>Giao diện này đang được Nginx phục vụ trực tiếp. Bấm nút bên dưới để gọi API xuyên qua Nginx vào Backend Java.</p>
+        <button onclick="testAPI()">Ping API Backend</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerText = "Đang gõ cửa Lễ tân...";
+            resultDiv.style.color = "#333";
+            
+            // Trình duyệt tự gọi đúng cái link /api/test mà không cần ghi domain
+            fetch('/api/test')
+                .then(response => {
+                    if(response.ok) return "🎉 Kết nối thành công! (200 OK)";
+                    throw new Error("Lỗi Server: " + response.status);
+                })
+                .then(text => {
+                    resultDiv.innerText = text;
+                    resultDiv.style.color = "#16a34a"; // Màu xanh lá
+                })
+                .catch(err => {
+                    resultDiv.innerText = err.message;
+                    resultDiv.style.color = "#dc2626"; // Màu đỏ
+                });
+        }
+    </script>
+</body>
+</html>
