@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Hộp 1: Database (Giữ nguyên không đổi)
+  # Hộp 1: Database
   db:
     image: mysql:8.0
     container_name: my_database
@@ -48,7 +48,7 @@ services:
         condition: service_healthy
     restart: always
 
-  # Hộp 3: Lễ tân Nginx (Cập nhật lại mục depends_on)
+  # Hộp 3: Lễ tân Nginx 
   nginx:
     image: nginx:latest
     container_name: my_nginx
@@ -62,38 +62,6 @@ services:
       - backend2
     restart: always
 
-volumes:
-  db_data:
-  # Hộp 2: Java App (Đã đóng kín cửa, không cho khách vào thẳng nữa)
-  backend:
-    image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
-    container_name: java_app
-    # ĐÃ XÓA dòng ports "8080:8080" ở đây!
-    environment:
-      # Báo cho Java biết đường dẫn đến Database. 'db' chính là tên của hộp 1.
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      # Cấp tài khoản cho Java chui vào
-      - SPRING_DATASOURCE_USERNAME=yen_user
-      - SPRING_DATASOURCE_PASSWORD=yenpassword
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
-    # SỬA LẠI: Luật khởi động mới
-    depends_on:
-      db:
-        condition: service_healthy # Đợi hộp db nhận mộc xanh 'healthy' mới được chạy
-    restart: always
-
-  # Hộp 3: Lễ tân Nginx (MỚI THÊM)
-  nginx:
-    image: nginx:latest
-    container_name: my_nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./frontend:/usr/share/nginx/html  # THÊM DÒNG NÀY VÀO ĐÂY
-    depends_on:
-      - backend
-    restart: always
-
+# Khai báo ổ cứng dùng chung (Chỉ ghi 1 lần duy nhất ở cuối file)
 volumes:
   db_data:
