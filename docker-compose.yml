@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Hộp 1: Database (Giữ nguyên)
+  # Hộp 1: Database (Giữ nguyên không đổi)
   db:
     image: mysql:8.0
     container_name: my_database
@@ -14,13 +14,56 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-    # THÊM MỚI: Bác sĩ khám sức khỏe
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s       # Cứ 5 giây gõ cửa kiểm tra 1 lần
-      timeout: 3s        # Đợi 3s không trả lời là đánh dấu chưa khỏe
-      retries: 5         # Cho phép thử lại 5 lần
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
+  # Hộp 2A: Java Sinh đôi số 1
+  backend1:
+    image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
+    container_name: java_app_1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=yen_user
+      - SPRING_DATASOURCE_PASSWORD=yenpassword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  # Hộp 2B: Java Sinh đôi số 2 (Y hệt số 1)
+  backend2:
+    image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
+    container_name: java_app_2
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=yen_user
+      - SPRING_DATASOURCE_PASSWORD=yenpassword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  # Hộp 3: Lễ tân Nginx (Cập nhật lại mục depends_on)
+  nginx:
+    image: nginx:latest
+    container_name: my_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend1
+      - backend2
+    restart: always
+
+volumes:
+  db_data:
   # Hộp 2: Java App (Đã đóng kín cửa, không cho khách vào thẳng nữa)
   backend:
     image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
