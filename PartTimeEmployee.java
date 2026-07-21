@@ -1,4 +1,3 @@
-package com.hr.management;
 
 public class PartTimeEmployee extends Employee {
     private int shiftsWorked;     // Số ca làm việc

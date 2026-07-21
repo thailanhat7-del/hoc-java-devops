@@ -1,4 +1,3 @@
-package com.hr.management;
 
 public class FullTimeEmployee extends Employee {
     private double bonus; // Tiền thưởng riêng của nhân viên Full-time

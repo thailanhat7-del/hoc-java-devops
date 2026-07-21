@@ -1,4 +1,3 @@
-package com.hr.management;
 
 // Từ khóa 'abstract' nghĩa là lớp này chưa hoàn chỉnh, không thể tạo trực tiếp bằng lệnh 'new Employee()'
 public abstract class Employee {
